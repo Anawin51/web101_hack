@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - ร้านอาหาร</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-layout">
+        <div id="alert-box" class="alert hidden"></div>
+
+        <div id="login-box" class="card card-auth">
+            <h2 class="text-center">🍽️ เข้าสู่ระบบ</h2>
+            <br>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>อีเมล</label>
+                    <input type="email" id="login-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน</label>
+                    <input type="password" id="login-password" class="form-control" required>
+                </div>
+                <button type="submit" id="btn-login" class="btn btn-primary">เข้าสู่ระบบ</button>
+            </form>
+            <p class="text-center" style="margin-top: 15px; font-size: 14px;">
+                ยังไม่มีบัญชี? <a href="#" id="go-to-register">สมัครสมาชิก</a>
+            </p>
+        </div>
+
+        <div id="register-box" class="card card-auth hidden">
+            <h2 class="text-center">📝 สมัครสมาชิก</h2>
+            <br>
+            <form id="register-form">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>ชื่อ</label>
+                        <input type="text" id="reg-firstname" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>นามสกุล</label>
+                        <input type="text" id="reg-lastname" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>เบอร์โทรศัพท์</label>
+                    <input type="tel" id="reg-phone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>อีเมล</label>
+                    <input type="email" id="reg-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน</label>
+                    <input type="password" id="reg-password" class="form-control" required>
+                </div>
+                <button type="submit" id="btn-register" class="btn btn-success">สมัครสมาชิก</button>
+            </form>
+            <p class="text-center" style="margin-top: 15px; font-size: 14px;">
+                มีบัญชีอยู่แล้ว? <a href="#" id="go-to-login">เข้าสู่ระบบ</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
