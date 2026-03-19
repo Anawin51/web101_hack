@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ดผู้ดูแลระบบ - ร้านอาหาร</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="r-han.png">
+</head>
+<body>
+    <nav class="navbar" style="border-bottom-color: var(--danger);"> <div class="container flex-between">
+            <h1>🛡️ Admin Portal</h1>
+            <div class="flex-center">
+                <span class="badge badge-admin" style="margin-right: 10px;">Admin Mode</span>
+                <span class="navbar-user" id="nav-username">กำลังโหลด...</span>
+                <button id="btn-logout" class="btn btn-outline btn-small" style="margin-left: 10px; color: rgb(255, 151, 151); border-color: white;">ออกระบบ</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="alert-box" class="alert hidden"></div>
+
+        <h3 class="section-title" style="margin-bottom: 15px;">📊 ภาพรวมของร้านวันนี้</h3>
+        <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-blue">👥</div>
+                <div class="stat-value" id="stat-users">-</div>
+                <div class="stat-label">ลูกค้าในระบบ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-yellow">⏳</div>
+                <div class="stat-value" id="stat-pending">-</div>
+                <div class="stat-label">คิวรอยืนยัน</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-green">🪑</div>
+                <div class="stat-value" id="stat-tables-avail">-</div>
+                <div class="stat-label">โต๊ะว่างตอนนี้</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-red">🍽️</div>
+                <div class="stat-value" id="stat-tables-occ">-</div>
+                <div class="stat-label">โต๊ะที่มีคนนั่ง</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="left-panel">
+                <div class="card">
+                    <h3 class="section-title">🪑 จัดการโต๊ะในร้าน</h3>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-light);">
+                    <div id="tables-loading" class="text-center text-muted">กำลังโหลด...</div>
+                    <div id="tables-container" class="restaurant-tables"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                    <h3 class="section-title">📋 คิวการจองทั้งหมด</h3>
+                    <button onclick="fetchReservations()" class="btn btn-outline btn-small">🔄 รีเฟรชข้อมูล</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>วัน-เวลา</th>
+                                <th>ชื่อลูกค้า</th>
+                                <th class="text-center">คน</th>
+                                <th class="text-center">สถานะ</th>
+                                <th class="text-center" style="color: var(--primary);">การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="res-tbody">
+                            <tr><td colspan="5" class="text-center">กำลังโหลดข้อมูล...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard-admin.js"></script> </body>
+</html>

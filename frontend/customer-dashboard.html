@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จองโต๊ะร้านอาหาร | Customer Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="r-han.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ส่วนเสริม UI ให้ดู Modern ขึ้นเฉพาะหน้าลูกค้า */
+        body { background-color: #f8fafc; }
+        .hero-banner {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .hero-banner h2 { margin: 0 0 10px 0; font-size: 24px; }
+        .hero-banner p { margin: 0; opacity: 0.9; }
+        
+        /* สไตล์ฟอร์มจอง */
+        .booking-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .input-with-icon { position: relative; }
+        .input-with-icon i { position: absolute; left: 15px; top: 38px; color: #64748b; }
+        .input-with-icon input { padding-left: 40px; }
+        
+        /* สไตล์การ์ดประวัติการจอง (แทนตาราง) */
+        .res-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between;
+            align-items: center; transition: transform 0.2s;
+        }
+        .res-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .res-info h4 { margin: 0 0 5px 0; font-size: 16px; color: #1e293b; }
+        .res-info p { margin: 0; color: #64748b; font-size: 14px; }
+        .res-status { text-align: right; }
+        .res-status .badge { display: inline-block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" style="background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="container flex-between">
+            <h1 style="color: #2563eb; font-size: 20px;"><i class="fa-solid fa-utensils"></i> อิ่มอร่อย Restaurant</h1>
+            <div>
+                <button id="btn-logout" class="btn btn-outline btn-small" style="color: #ef4444; border-color: #ef4444;">
+                    <i class="fa-solid fa-right-from-bracket"></i> ออกระบบ
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 20px;">
+        <div id="alert-box" class="alert hidden"></div>
+
+        <!-- Banner ทักทายลูกค้า -->
+        <div class="hero-banner">
+            <h2 id="welcome-text">กำลังโหลดข้อมูล...</h2>
+            <p>จองโต๊ะล่วงหน้า เพื่อมื้อพิเศษของคุณและคนที่คุณรัก</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- คอลัมน์ซ้าย: ฟอร์มจองโต๊ะ -->
+            <div class="left-panel">
+                <div class="booking-card">
+                    <h3 class="section-title"><i class="fa-regular fa-calendar-check"></i> สร้างการจองใหม่</h3>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                    
+                    <form id="book-form">
+                        <div class="form-group input-with-icon">
+                            <label>วันที่ต้องการจอง</label>
+                            <i class="fa-regular fa-calendar"></i>
+                            <input type="date" id="book-date" class="form-control" required>
+                        </div>
+                        <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group input-with-icon">
+                                <label>เวลา</label>
+                                <i class="fa-regular fa-clock"></i>
+                                <input type="time" id="book-time" class="form-control" required>
+                            </div>
+                            <div class="form-group input-with-icon">
+                                <label>จำนวนลูกค้า</label>
+                                <i class="fa-solid fa-user-group"></i>
+                                <input type="number" id="book-guests" min="1" placeholder="จำนวนท่าน" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; font-size: 16px;">
+                            ยืนยันการจองโต๊ะ
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- คอลัมน์ขวา: ประวัติการจอง -->
+            <div class="right-panel">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                    <h3 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> ประวัติการจองของฉัน</h3>
+                    <button onclick="fetchReservations()" class="btn btn-outline btn-small">
+                        <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+                    </button>
+                </div>
+                
+                <!-- เปลี่ยนจากการใช้ Table มาเป็น div container สำหรับใส่ Card -->
+                <div id="res-list-container">
+                    <div class="text-center text-muted" style="padding: 20px;">กำลังโหลดข้อมูล...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dashboard-customer.js"></script>
+</body>
+</html>
