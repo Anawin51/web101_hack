@@ -8,33 +8,29 @@ const session = require('express-session'); // เรียกใช้งาน
 
 const app = express();
 
-// ==========================================
+
 // 0. CORS & Body Parser
-// ==========================================
-// จำเป็นต้องเปิด credentials: true และระบุ origin เพื่อให้ส่ง Cookie ข้ามโดเมนได้ (สำหรับตอนทำ Frontend)
 app.use(cors({
-    origin: 'http://127.0.0.1:5500', // ✨ เปลี่ยนตรงนี้ให้เป๊ะทุกตัวอักษร!
+    origin: 'http://127.0.0.1:5500', // เปลี่ยนตรงนี้ให้เป๊ะทุกตัวอักษร!
     credentials: true 
 }));
 app.use(express.json());
 
-// ==========================================
+
 // 1. Session Middleware (ตั้งค่าระบบ Cookie)
-// ==========================================
 app.use(session({
     secret: process.env.JWT_SECRET || 'my_super_secret_session_key', // ใช้เป็น secret ของ session แทน
     resave: false,
     saveUninitialized: false,
     cookie: {
         secure: false, // ถ้าอัปขึ้น Server จริงที่เป็น HTTPS ให้เปลี่ยนเป็น true
-        httpOnly: true, // ป้องกัน XSS
+        httpOnly: true, 
         maxAge: 1000 * 60 * 60 * 24 // อายุ Session 1 วัน
     }
 }));
 
-// ==========================================
+
 // 2. Database Connection Pool
-// ==========================================
 const db = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,   // ← เพิ่มบรรทัดนี้
@@ -46,9 +42,8 @@ const db = mysql.createPool({
     queueLimit: 0
 });
 
-// ==========================================
+
 // 3. Middlewares (Auth & Role Control)
-// ==========================================
 // เช็คว่าเข้าสู่ระบบ (มี Session) หรือยัง
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
@@ -66,10 +61,8 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 
-// ==========================================
-// 4. Auth Routes
-// ==========================================
 
+// 4. Auth Routes
 // Register
 app.post('/api/auth/register', async (req, res) => {
     try {
@@ -142,10 +135,8 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
     }
 });
 
-// ==========================================
-// 5. Tables Routes
-// ==========================================
 
+// 5. Tables Routes
 // ดูรายการโต๊ะทั้งหมด (ทุกคนดูได้)
 app.get('/api/tables', async (req, res) => {
     try {
@@ -156,10 +147,8 @@ app.get('/api/tables', async (req, res) => {
     }
 });
 
-// ==========================================
-// 6. Reservations Routes
-// ==========================================
 
+// 6. Reservations Routes
 // ลูกค้าสร้างการจองใหม่ (แก้ verifyToken เป็น requireAuth)
 app.post('/api/reservations', requireAuth, async (req, res) => {
     try {
@@ -249,10 +238,7 @@ app.put('/api/reservations/:id/status', requireAuth, requireAdmin, async (req, r
     }
 });
 
-// ==========================================
 // 7. Admin Delete Routes
-// ==========================================
-
 // ลบการจอง
 app.delete('/api/reservations/:id', requireAuth, requireAdmin, async (req, res) => {
     try {
@@ -293,10 +279,8 @@ app.delete('/api/users/:id', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-// ==========================================
-// 8. Admin - Users Management
-// ==========================================
 
+// 8. Admin - Users Management
 // ดู Users ทั้งหมด
 app.get('/api/admin/users', requireAuth, requireAdmin, async (req, res) => {
     try {
@@ -332,10 +316,8 @@ app.put('/api/admin/users/:id/role', requireAuth, requireAdmin, async (req, res)
     }
 });
 
-// ==========================================
-// 9. Admin - Tables Management
-// ==========================================
 
+// 9. Admin - Tables Management
 // เพิ่มโต๊ะใหม่
 app.post('/api/admin/tables', requireAuth, requireAdmin, async (req, res) => {
     try {
@@ -391,10 +373,8 @@ app.put('/api/admin/tables/:id', requireAuth, requireAdmin, async (req, res) => 
     }
 });
 
-// ==========================================
-// 10. Admin - Dashboard
-// ==========================================
 
+// 10. Admin - Dashboard
 app.get('/api/admin/dashboard', requireAuth, requireAdmin, async (req, res) => {
     try {
         const [[{ total_users }]]        = await db.query("SELECT COUNT(*) AS total_users FROM users WHERE role = 'customer'");
@@ -417,10 +397,9 @@ app.get('/api/admin/dashboard', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-// ==========================================
+
 // Start Server
-// ==========================================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(` Server is running on port ${PORT}`);
 });
